@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Toko</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h3 {
+      margin-top: 40px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #f2f2f2;
+    }
+    form.inline {
+      display: inline;
+    }
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .danger {
+      background: #e74c3c;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<h3>Produk & Stok</h3>
+<table>
+  <tr>
+    <th>Produk</th>
+    <th>Harga</th>
+    <th>Stok</th>
+  </tr>
+  <% products.forEach(p => { %>
+  <tr>
+    <td><%= p.name %></td>
+    <td>Rp <%= p.price %></td>
+    <td><%= p.stock_product %></td>
+  </tr>
+  <% }) %>
+</table>
+
+<h3>Input Pembelian</h3>
+<form method="POST" action="/beli">
+  <select name="product_id" required>
+    <% products.forEach(p => { %>
+      <option value="<%= p.id %>">
+        <%= p.name %> (stok: <%= p.stock %>)
+      </option>
+    <% }) %>
+  </select>
+
+  <input type="number" name="qty" min="1" required>
+  <button type="submit">Beli</button>
+</form>
+
+<h3>List Pembelian</h3>
+<table>
+  <tr>
+    <th>Produk</th>
+    <th>Qty</th>
+    <th>Total</th>
+    <th>Status</th>
+    <th>Aksi</th>
+  </tr>
+
+  <% pembelian.forEach(pb => { %>
+  <tr>
+    <td><%= pb.name %></td>
+    <td><%= pb.qty %></td>
+    <td>Rp <%= pb.total_price %></td>
+    <td><%= pb.status %></td>
+    <td>
+      <% if (pb.status === 'success') { %>
+        <form class="inline" method="POST" action="/cancel/<%= pb.id %>">
+          <button class="danger">Cancel</button>
+        </form>
+      <% } else { %>
+        -
+      <% } %>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+
+</body>
+</html>
